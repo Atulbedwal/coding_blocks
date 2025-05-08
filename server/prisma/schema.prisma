@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  role      String    @default("user") // NEW FIELD: 'user' or 'admin'
+  vehicles  Vehicle[]
+  wallet    Wallet?
+  parkings  Parking[]
+}
+
+model Vehicle {
+  id         Int     @id @default(autoincrement())
+  number     String
+  type       String
+  fuelType   String
+  photo      String?
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  parkings Parking[]
+}
+
+model Parking {
+  id         Int       @id @default(autoincrement())
+  timeIn  DateTime  @default(now()) // Required
+  timeOut   DateTime?
+  amount     Int?
+  status     String?   @default("active")
+  vehicle    Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicleId  Int
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+}
+
+
+model Wallet {
+  id        Int    @id @default(autoincrement())
+  balance   Int    @default(0)
+  lastAdded DateTime?
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int    @unique
+}
