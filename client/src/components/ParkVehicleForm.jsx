@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert"
 import { CheckCircle2, AlertCircle } from "lucide-react"
 
-export function ParkVehicleForm() {
+export function ParkVehicleForm({onParked}) {
   const [selectedVehicle, setSelectedVehicle] = useState("")
   const [isNewVehicle, setIsNewVehicle] = useState(false)
   const [vehicleNumber, setVehicleNumber] = useState("")
@@ -112,6 +112,7 @@ export function ParkVehicleForm() {
 
       setShowSuccess(true)
       setShowError(false)
+      onParked?.()
     } catch (error) {
       setErrorMessage(error.message)
       setShowError(true)
@@ -157,7 +158,7 @@ export function ParkVehicleForm() {
               <SelectTrigger id="vehicle">
                 <SelectValue placeholder="Select a vehicle" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {userVehicles.length === 0 ? (
                   <SelectItem disabled>Loading...</SelectItem>
                 ) : (
@@ -182,13 +183,13 @@ export function ParkVehicleForm() {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               <Label htmlFor="vehicleType">Vehicle Type</Label>
               <Select value={vehicleType} onValueChange={setVehicleType}>
                 <SelectTrigger id="vehicleType">
                   <SelectValue placeholder="Select vehicle type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="2-wheeler">2-Wheeler</SelectItem>
                   <SelectItem value="3-wheeler">3-Wheeler</SelectItem>
                   <SelectItem value="4-wheeler">4-Wheeler</SelectItem>
@@ -202,7 +203,7 @@ export function ParkVehicleForm() {
                 <SelectTrigger id="fuelType">
                   <SelectValue placeholder="Select fuel type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="PETROL">Petrol</SelectItem>
                   <SelectItem value="DIESEL">Diesel</SelectItem>
                   <SelectItem value="CNG">CNG</SelectItem>

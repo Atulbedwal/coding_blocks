@@ -12,7 +12,8 @@ export const addVehicle = async (req, res) => {
 
     const vehicle = await prisma.vehicle.create({
       data: {
-        number,    
+        number,  
+        type,  
         fuelType,
         photo: photoUrl,  // Updated to match the Prisma field 'photo'
         userId: req.user.id,  // Ensure user is authenticated
@@ -51,7 +52,7 @@ export const delVehicle = async (req, res) => {
 export const updateVehicle = async (req, res) => {
   try {
     const vehicleId = parseInt(req.params.id);
-    const { number, fuelType, photo } = req.body;
+    const { number, type, fuelType, photo } = req.body;
 
     const vehicle = await prisma.vehicle.findUnique({ where: { id: vehicleId } });
     if (!vehicle || vehicle.userId !== req.user.id) {
@@ -60,7 +61,7 @@ export const updateVehicle = async (req, res) => {
 
     const updated = await prisma.vehicle.update({
       where: { id: vehicleId },
-      data: { number, fuelType, photo },
+      data: { number, type, fuelType, photo },
     });
 
     res.status(200).json(updated);
@@ -68,6 +69,7 @@ export const updateVehicle = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 

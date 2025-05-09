@@ -1,22 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { LogOut, Menu, User, X } from "lucide-react";
 
 export function DashboardHeader({ userType }) {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -24,13 +18,27 @@ export function DashboardHeader({ userType }) {
     navigate("/");
   };
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-white shadow-sm sticky top-0 z-40">
       <div className="container mx-auto px-4 py-4 relative">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Link to="/dashboard" className="text-2xl font-bold text-gray-800">
-              ParkEase
+              UrbanSlot
             </Link>
 
             <nav className="hidden md:flex ml-10 space-x-8">
@@ -56,40 +64,40 @@ export function DashboardHeader({ userType }) {
               {userType === "admin" ? "Admin" : "User"} Account
             </span>
 
-            <div className="relative">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-10 w-10 rounded-full p-0"
+            {/* Custom dropdown implementation */}
+            <div className="relative" ref={dropdownRef}>
+              <Button
+                variant="ghost"
+                className="relative h-10 w-10 rounded-full p-0 focus:outline-none"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-gray-100">
+                    {userType === "admin" ? "AD" : "US"}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+              
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 py-1 ring-1 ring-black ring-opacity-5">
+                  <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                    My Account
+                  </div>
+                  <button
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-gray-100">
-                        {userType === "admin" ? "AD" : "US"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  className="w-56 z-[1000] mt-2 " 
-                  align="end"
-                  sideOffset={8}
-                >
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    className="cursor-pointer"
+                  </button>
+                  <button
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </button>
+                </div>
+              )}
             </div>
 
             <Button

@@ -106,7 +106,7 @@ const Wallet = () => {
           Add Money
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-[400px] bg-white">
         <DialogHeader>
           <DialogTitle>Recharge Wallet</DialogTitle>
         </DialogHeader>

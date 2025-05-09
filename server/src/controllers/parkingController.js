@@ -104,9 +104,9 @@ export const parkVehicle = async (req, res) => {
 export const endParkingSession = async (req, res) => {
   try {
     const { id } = req.params;
-
     const parking = await prisma.parking.findUnique({
       where: { id: parseInt(id) },
+      include: { vehicle: true },
     });
 
     if (!parking) {
@@ -114,16 +114,37 @@ export const endParkingSession = async (req, res) => {
     }
 
     if (parking.timeOut) {
-      return res.status(400).json({ error: "This session is already ended" });
+      return res.status(400).json({ error: "Already exited" });
     }
 
+    const now = new Date();
+    const diffMs = now - parking.timeIn;
+    const hours = Math.ceil(diffMs / (1000 * 60 * 60)); // round up to next hour
+
+    const isFree = parking.vehicle.fuelType === "ELECTRIC";
+    const charge = isFree ? 0 : hours * 50;
+
+    // Update the parking entry
     const updated = await prisma.parking.update({
       where: { id: parseInt(id) },
       data: {
-        timeOut: new Date(),
-        status: "completed", // Optional if you track status
+        timeOut: now,
+        amount: charge,
+        status: "completed",
       },
     });
+
+    // Deduct from wallet if not free
+    if (!isFree) {
+      await prisma.wallet.update({
+        where: { userId: parking.userId },
+        data: {
+          balance: {
+            decrement: charge,
+          },
+        },
+      });
+    }
 
     res.status(200).json(updated);
   } catch (error) {
@@ -131,4 +152,54 @@ export const endParkingSession = async (req, res) => {
   }
 };
 
+export const clearParkingHistory = async (req, res) => {
+  try {
+    await prisma.parking.deleteMany({
+      where: { userId: req.user.id },
+    })
+    res.status(200).json({ message: "Parking history cleared." })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+export const getParkingStats = async (req, res) => {
+  try {
+    const totalSlots = {
+      "2-wheeler": 100,
+      "3-wheeler": 50,
+      "4-wheeler": 200,
+    };
+
+    const activeParkings = await prisma.parking.findMany({
+      where: { timeOut: null },
+      include: { vehicle: true },
+    });
+
+    const occupied = {
+      "2-wheeler": 0,
+      "3-wheeler": 0,
+      "4-wheeler": 0,
+    };
+
+    for (const entry of activeParkings) {
+      const type = entry.vehicle?.type;
+      if (occupied[type] !== undefined) {
+        occupied[type]++;
+      }
+    }
+
+    const stats = {};
+    for (const type in totalSlots) {
+      stats[type] = {
+        total: totalSlots[type],
+        occupied: occupied[type],
+      };
+    }
+
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 

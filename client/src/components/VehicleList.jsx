@@ -144,7 +144,7 @@ export function VehicleList() {
 
       {editVehicle && (
         <Dialog open={!!editVehicle} onOpenChange={() => setEditVehicle(null)}>
-          <DialogContent>
+          <DialogContent className="bg-white">
             <DialogHeader>
               <DialogTitle>Edit Vehicle</DialogTitle>
             </DialogHeader>

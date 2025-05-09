@@ -14,6 +14,8 @@ const DashboardPage = () => {
   const navigate = useNavigate()
   const [userType, setUserType] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
+
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -48,7 +50,7 @@ const DashboardPage = () => {
               <CardDescription>Current status of parking spaces</CardDescription>
             </CardHeader>
             <CardContent>
-              <ParkingStats />
+            <ParkingStats refreshKey={refreshKey} />
             </CardContent>
           </Card>
 
@@ -77,7 +79,7 @@ const DashboardPage = () => {
                 <CardDescription>Enter your vehicle details to park</CardDescription>
               </CardHeader>
               <CardContent>
-                <ParkVehicleForm />
+              <ParkVehicleForm onParked={() => setRefreshKey((k) => k + 1)} />
               </CardContent>
             </Card>
           </TabsContent>

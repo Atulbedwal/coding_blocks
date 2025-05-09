@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Parking" ADD COLUMN     "status" TEXT DEFAULT 'active',
+ALTER COLUMN "timeIn" SET DEFAULT CURRENT_TIMESTAMP,
+ALTER COLUMN "amount" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Vehicle" ADD COLUMN     "type" TEXT,
+ALTER COLUMN "photo" DROP NOT NULL;

@@ -46,7 +46,7 @@ export const getParkingHistory = async () => {
   return await response.json();
 };
 
-// ✅ End an active parking session
+
 export const endParkingSession = async (parkingId) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${API_BASE_URL}/parking/${parkingId}/exit`, {
@@ -59,6 +59,22 @@ export const endParkingSession = async (parkingId) => {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to end parking session');
+  }
+
+  return await response.json();
+};
+
+export const getParkingStats = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_BASE_URL}/parking/stats`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to fetch parking stats');
   }
 
   return await response.json();

@@ -1,59 +1,63 @@
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+"use client"
 
-// Mock data - in a real app, this would come from an API
-const mockParkingData = {
-  twoWheeler: { total: 100, occupied: 65 },
-  threeWheeler: { total: 50, occupied: 20 },
-  fourWheeler: { total: 200, occupied: 150 },
-};
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 
-function ParkingStats() {
-  const [parkingData, setParkingData] = useState(mockParkingData);
+export default function ParkingStats({ refreshKey }) {
+  const [stats, setStats] = useState({
+    "2-wheeler": { total: 100, occupied: 0 },
+    "3-wheeler": { total: 50, occupied: 0 },
+    "4-wheeler": { total: 200, occupied: 0 },
+  })
+  const [loading, setLoading] = useState(true)
+
+  const fetchStats = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const res = await fetch("http://localhost:5001/api/parking/stats", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!res.ok) throw new Error("Failed to fetch stats")
+
+      const data = await res.json()
+      setStats(data)
+    } catch (err) {
+      console.error("Failed to load stats:", err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setParkingData((prev) => ({
-        twoWheeler: {
-          ...prev.twoWheeler,
-          occupied: Math.max(
-            0,
-            Math.min(prev.twoWheeler.total, prev.twoWheeler.occupied + Math.floor(Math.random() * 3) - 1)
-          ),
-        },
-        threeWheeler: {
-          ...prev.threeWheeler,
-          occupied: Math.max(
-            0,
-            Math.min(prev.threeWheeler.total, prev.threeWheeler.occupied + Math.floor(Math.random() * 3) - 1)
-          ),
-        },
-        fourWheeler: {
-          ...prev.fourWheeler,
-          occupied: Math.max(
-            0,
-            Math.min(prev.fourWheeler.total, prev.fourWheeler.occupied + Math.floor(Math.random() * 3) - 1)
-          ),
-        },
-      }));
-    }, 3000);
+    setLoading(true)
+    fetchStats()
+  }, [refreshKey])
 
-    return () => clearInterval(interval);
-  }, []);
+  if (loading) {
+    return <p className="text-center py-6">Loading parking stats...</p>
+  }
 
   return (
     <div className="grid md:grid-cols-3 gap-6">
-      <ParkingTypeCard title="2-Wheeler Parking" {...parkingData.twoWheeler} />
-      <ParkingTypeCard title="3-Wheeler Parking" {...parkingData.threeWheeler} />
-      <ParkingTypeCard title="4-Wheeler Parking" {...parkingData.fourWheeler} />
+      {["2-wheeler", "3-wheeler", "4-wheeler"].map((type) => (
+        <ParkingCard
+          key={type}
+          title={`${type.replace("-", " ").toUpperCase()}`}
+          total={stats[type]?.total || 0}
+          occupied={stats[type]?.occupied || 0}
+        />
+      ))}
     </div>
-  );
+  )
 }
 
-function ParkingTypeCard({ title, total, occupied }) {
-  const available = total - occupied;
-  const percentOccupied = (occupied / total) * 100;
+function ParkingCard({ title, total, occupied }) {
+  const available = total - occupied
+  const percent = total > 0 ? Math.round((occupied / total) * 100) : 0
 
   return (
     <Card>
@@ -62,7 +66,7 @@ function ParkingTypeCard({ title, total, occupied }) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Progress value={percentOccupied} className="h-2" />
+          <Progress value={percent} className="h-2" />
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-muted-foreground">Available</p>
@@ -74,16 +78,14 @@ function ParkingTypeCard({ title, total, occupied }) {
             </div>
           </div>
           <p className="text-xs text-muted-foreground text-center">
-            {percentOccupied >= 90
+            {percent >= 90
               ? "Almost full! Hurry up."
-              : percentOccupied >= 70
+              : percent >= 70
               ? "Filling up quickly."
               : "Plenty of spaces available."}
           </p>
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
-
-export default ParkingStats;

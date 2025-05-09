@@ -7,7 +7,7 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">ParkEase</h1>
+          <h1 className="text-2xl font-bold text-gray-800">UrbanSlot</h1>
           <div className="space-x-4">
             <Link to="/login">
               <Button variant="outline">Login</Button>
@@ -73,7 +73,7 @@ const Home = () => {
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="mb-4 md:mb-0">© 2025 ParkEase. All rights reserved.</p>
+            <p className="mb-4 md:mb-0">© 2025 UrbanSlot. All rights reserved.</p>
             <div className="flex space-x-6">
               <Link to="/terms" className="hover:underline">
                 Terms
