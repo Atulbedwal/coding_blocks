@@ -31,6 +31,11 @@ app.use('/api/parking', parkingRoutes);
 app.use('/api/wallet', walletRoutes);
 app.use('/api/auth', authRoutes); 
 
+app.get('/', (req, res) => {
+  res.send('Backend API is running!');
+});
+
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
