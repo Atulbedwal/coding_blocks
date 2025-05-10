@@ -18,7 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({
   origin: ["http://localhost:5173",
-    "https://coding-blocks-iota.vercel.app/"
+    "https://coding-blocks-iota.vercel.app"
    ],
   credentials: true               
 }));
