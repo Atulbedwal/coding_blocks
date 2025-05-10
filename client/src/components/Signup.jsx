@@ -82,7 +82,7 @@ const Signup = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800" disabled={isLoading}>
               {isLoading ? 'Signing up...' : 'Sign Up'}
             </Button>
           </form>

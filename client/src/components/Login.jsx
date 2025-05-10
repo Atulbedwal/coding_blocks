@@ -82,7 +82,7 @@ const Login = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800" disabled={isLoading}>
               {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
@@ -90,7 +90,7 @@ const Login = () => {
         <CardFooter className="flex flex-col">
           <div className="text-center text-sm mt-2">
             Don&apos;t have an account?{' '}
-            <Link to="/signup" className="text-blue-600 hover:underline">
+            <Link to="/register" className="text-blue-600 hover:underline">
               Sign up
             </Link>
           </div>
