@@ -23,6 +23,7 @@ app.use(cors({
 app.use(passport.initialize());
 
 // Routes
+
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/parking', parkingRoutes);
 app.use('/api/wallet', walletRoutes);

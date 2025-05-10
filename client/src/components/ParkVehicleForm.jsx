@@ -226,7 +226,7 @@ export function ParkVehicleForm({onParked}) {
         )}
 
         <div className="pt-4">
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800" disabled={isSubmitting}>
             {isSubmitting ? "Processing..." : "Park Vehicle"}
           </Button>
         </div>
