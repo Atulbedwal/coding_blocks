@@ -17,19 +17,18 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:5173",
-    "https://coding-blocks-iota.vercel.app"
-   ],
+  origin: "https://coding-blocks-iota.vercel.app"
+   ,
   credentials: true               
 }));
 app.use(passport.initialize());
 
 // Routes
-
+app.use('/api/auth', authRoutes); 
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/parking', parkingRoutes);
 app.use('/api/wallet', walletRoutes);
-app.use('/api/auth', authRoutes); 
+
 
 app.get('/', (req, res) => {
   res.send('Backend API is running!');
