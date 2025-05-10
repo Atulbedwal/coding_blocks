@@ -126,7 +126,7 @@ const Wallet = () => {
           <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleRecharge}>Add Money</Button>
+          <Button onClick={handleRecharge} className="bg-black text-white hover:bg-gray-800">Add Money</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

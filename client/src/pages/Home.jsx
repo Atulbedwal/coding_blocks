@@ -10,10 +10,10 @@ const Home = () => {
           <h1 className="text-2xl font-bold text-gray-800">UrbanSlot</h1>
           <div className="space-x-4">
             <Link to="/login">
-              <Button variant="outline">Login</Button>
+              <Button variant="outline" className="bg-black text-white hover:bg-gray-800">Login</Button>
             </Link>
             <Link to="/register">
-              <Button>Register</Button>
+              <Button variant="outline">Register</Button>
             </Link>
           </div>
         </div>
@@ -28,7 +28,7 @@ const Home = () => {
           </p>
           <div className="flex justify-center gap-4">
             <Link to="/register">
-              <Button size="lg">Get Started</Button>
+              <Button size="lg" className="bg-black text-white hover:bg-gray-800">Get Started</Button>
             </Link>
             <a href="#features">
               <Button size="lg" variant="outline">

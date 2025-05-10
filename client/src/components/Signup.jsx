@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import { api } from '../api/api'
 import {
   Card,
   CardContent,
@@ -28,10 +28,7 @@ const Signup = () => {
     setIsLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/signup', {
-        email,
-        password,
-      })
+      const response = await api.post('/auth/signup', { email, password })
       localStorage.setItem('token', response.data.token)
       setMessage('Signup successful!')
       navigate('/dashboard') // redirect after signup
