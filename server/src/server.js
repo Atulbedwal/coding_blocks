@@ -17,7 +17,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(cors({
-  origin: "https://coding-blocks-iota.vercel.app"
+  origin: "https://coding-blocks-frontend.onrender.com"
    ,
   credentials: true               
 }));
